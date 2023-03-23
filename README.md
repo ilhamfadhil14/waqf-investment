@@ -3,3 +3,12 @@
 ## Deskripsi
 
 Model Agent-Based menggambarkan bagaimana variasi dari behavior dan latar belakang akan mempengaruhi keputusan orang untuk melakukan investasi di Waqf link Investment ini.
+
+## Desain Model
+
+```mermaid
+flowchart LR
+
+Start --> Stop
+
+```

@@ -1,24 +1,70 @@
+breed [investors investor]
+
+investors-own [
+  financial-situation
+  invest-budget
+  living-cond
+  threshold
+  invest?
+  decision-time
+  decision-counter
+]
+
 to setup
 
   clear-all
+  reset-ticks
 
+  init
 
+  tick
 end
 
-to init-model
+to go
 
-  ask patches [sprout 1
-    [set shape "square"
-     set color red]
+  ask investors [
+    if ticks mod decision-time = 0 and invest? = false and decision-counter < 3[
+
+      set decision-counter decision-counter + 1
+      let decision random-float 0.7
+
+      if decision > threshold [
+        set color green
+        set invest? true
+      ]
+    ]
+  ]
+
+  tick
+end
+
+to init
+
+  set-default-shape investors "square"
+
+  ask patches [
+    sprout-investors 1
+    [
+      let invest-budget-value random-float 0.3
+
+      set color red
+      set financial-situation random 100
+      set living-cond random 100
+      set threshold random-float parameter-threshold
+      set financial-situation random-normal 1000 20
+      set invest-budget precision invest-budget-value 3
+      set decision-time one-of (list 7 15 30 60)
+      set invest? false
+    ]
   ]
 
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+218
+15
+655
+453
 -1
 -1
 13.0
@@ -35,11 +81,45 @@ GRAPHICS-WINDOW
 16
 -16
 16
-0
-0
+1
+1
 1
 ticks
 30.0
+
+SLIDER
+9
+27
+193
+60
+parameter-threshold
+parameter-threshold
+0
+1
+1.0
+0.01
+1
+NIL
+HORIZONTAL
+
+PLOT
+11
+92
+211
+242
+Investors Counter
+Tick
+Investors
+0.0
+10.0
+0.0
+1000.0
+true
+false
+"" ""
+PENS
+"Potential" 1.0 0 -16777216 true "" "plot count investors with [invest? = false]"
+"Investors" 1.0 0 -2674135 true "" "plot count investors with [invest? = true]"
 
 @#$#@#$#@
 @#$#@#$#@
@@ -350,6 +430,7 @@ Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
 NetLogo 6.2.2
 @#$#@#$#@
+setup
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
